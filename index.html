@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Good Things - Premium School Stationery Shop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">Good Things</div>
+        <div class="contact-info">📞 Call Us: +91 99999 99999</div>
+    </header>
+
+    <nav class="nav-tabs">
+        <button class="tab-btn active" onclick="switchPage('home')">🏠 Home / Intro</button>
+        <button class="tab-btn" onclick="switchPage('shop')">🎒 Shop Items</button>
+        <button class="tab-btn" onclick="switchPage('bill')">🛍️ View Bill <span id="cart-count">0</span></button>
+    </nav>
+
+    <section id="page-home" class="page-section active">
+        <div class="hero">
+            <h1>Welcome to Good Things</h1>
+            <p>Your ultimate destination for premium school essentials and creative supplies.</p>
+        </div>
+        
+        <div class="intro-container">
+            <h2>About Our Shop</h2>
+            <p>At <strong>Good Things</strong>, we believe that the right tools inspire great minds. We are a dedicated school stationery store providing everything a student needs to succeed, create, and enjoy their learning journey.</p>
+            <p>From top-quality branded notebooks and smooth-writing pens to ergonomic school gear and professional art supplies, we source only the finest products for your children. Visit us today to experience a world of colorful, joyful, and high-quality stationery items!</p>
+            
+            <div class="highlights-box">
+                <h3>Why Shop With Us?</h3>
+                <ul>
+                    <li>✨ Top international and national school brands</li>
+                    <li>✨ Friendly service and comfortable shopping environment</li>
+                    <li>✨ Affordable pricing with exciting seasonal student offers</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="page-shop" class="page-section">
+        <div class="shop-intro">
+            <h2>Explore Our Categories</h2>
+            <p>Select a category below to browse through our 40 premium school products. Click any item to add it to your digital bill estimate.</p>
+        </div>
+
+        <div class="category-grid">
+            <div class="category-card" onclick="loadCategory('notebooks')">
+                <h3>📓</h3>
+                <div class="card-title">Notebooks</div>
+                <p>10 Premium Writing & Drawing Books</p>
+            </div>
+            <div class="category-card" onclick="loadCategory('stationery')">
+                <h3>✏️</h3>
+                <div class="card-title">Cute Stationery</div>
+                <p>10 Fancy & Fun Writing Instruments</p>
+            </div>
+            <div class="category-card" onclick="loadCategory('gear')">
+                <h3>🎒</h3>
+                <div class="category-card-title">School Gear</div>
+                <p>10 Bags, Bottles & Lunch Boxes</p>
+            </div>
+            <div class="category-card" onclick="loadCategory('art')">
+                <h3>🎨</h3>
+                <div class="card-title">Art & Craft</div>
+                <p>10 Professional Creative Materials</p>
+            </div>
+        </div>
+
+        <div id="dynamic-products-area" class="dynamic-products-container" style="display: none;">
+            <h3 id="current-category-title">Selected Collection</h3>
+            <div id="items-grid" class="items-grid"></div>
+        </div>
+    </section>
+
+    <section id="page-bill" class="page-section">
+        <div class="bill-container">
+            <h2>🛍️ Digital Bill Estimate</h2>
+            <p>Review all the stationery items selected from the shop page below.</p>
+            
+            <div class="bill-box">
+                <table id="bill-table">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Unit Price</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bill-body">
+                        <tr id="empty-bill-message">
+                            <td colspan="3" style="text-align: center; color: #b2bec3; padding: 30px;">Your bill is currently empty. Go to the "Shop Items" page to add products!</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="bill-total">
+                    <span>Grand Total:</span>
+                    <span id="bill-total-amount">₹0</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <h3>Visit Our Offline Store</h3>
+        <p>📍 Shop Address, Main Street, Your City</p>
+        <p>⏰ Timings: 9:00 AM - 9:00 PM (All Days Open)</p>
+    </footer>
+
+    <script>
+        // Data containing 10 products per category with highly reliable image URLs
+        const productData = {
+            notebooks: [
+                { name: "Classmate Long Book (Unruled)", price: 60, img: "https://placehold.co/400x300/a29bfe/ffffff?text=Premium+Notebook" },
+                { name: "Classmate Note Book (Ruled)", price: 45, img: "https://placehold.co/400x300/74b9ff/ffffff?text=Ruled+Notebook" },
+                { name: "Premium Drawing Book A4", price: 70, img: "https://placehold.co/400x300/55efc4/ffffff?text=Drawing+Book" },
+                { name: "Graph Book (32 Pages)", price: 25, img: "https://placehold.co/400x300/ffeaa7/ffffff?text=Graph+Book" },
+                { name: "Pocket Diary / Memo Pad", price: 30, img: "https://placehold.co/400x300/fab1a0/ffffff?text=Pocket+Diary" },
+                { name: "Premium Spiral Binding Notebook", price: 120, img: "https://placehold.co/400x300/ff7675/ffffff?text=Spiral+Notebook" },
+                { name: "Multi-Color Scrap Book", price: 80, img: "https://placehold.co/400x300/fd79a8/ffffff?text=Scrap+Book" },
+                { name: "Practical Physics Record Note", price: 90, img: "https://placehold.co/400x300/6c5ce7/ffffff?text=Physics+Record" },
+                { name: "Practical Chemistry Record Note", price: 90, img: "https://placehold.co/400x300/0984e3/ffffff?text=Chemistry+Record" },
+                { name: "Rough Notebook Combo Pack (3-in-1)", price: 110, img: "https://placehold.co/400x300/00cec9/ffffff?text=Notebook+Combo" }
+            ],
+            stationery: [
+                { name: "Cute Gel Pen Set (5 Pcs)", price: 50, img: "https://placehold.co/400x300/ffeaa7/ffffff?text=Cute+Gel+Pens" },
+                { name: "Magnetic Double-Side Pencil Box", price: 150, img: "https://placehold.co/400x300/fab1a0/ffffff?text=Pencil+Box" },
+                { name: "Macaron Pastel Erasers Pack", price: 40, img: "https://placehold.co/400x300/74b9ff/ffffff?text=Pastel+Erasers" },
+                { name: "Neon Bright Highlighters Set", price: 90, img: "https://placehold.co/400x300/a29bfe/ffffff?text=Highlighters" },
+                { name: "Premium Fine-Point Ball Pen", price: 250, img: "https://placehold.co/400x300/55efc4/ffffff?text=Premium+Pen" },
+                { name: "Stainless Steel Geometry Tool Set", price: 80, img: "https://placehold.co/400x300/ff7675/ffffff?text=Geometry+Box" },
+                { name: "Correction Tape / Whitener Roll", price: 45, img: "https://placehold.co/400x300/fd79a8/ffffff?text=Correction+Tape" },
+                { name: "Mechanical Pencil (0.5mm) With Leads", price: 60, img: "https://placehold.co/400x300/6c5ce7/ffffff?text=Mechanical+Pencil" },
+                { name: "Wooden Premium Pencils Pack", price: 70, img: "https://placehold.co/400x300/0984e3/ffffff?text=Wooden+Pencils" },
+                { name: "Fancy Animal Sticky Notes Pack", price: 35, img: "https://placehold.co/400x300/00cec9/ffffff?text=Sticky+Notes" }
+            ],
+            gear: [
+                { name: "Ergonomic Orthopedic School Bag", price: 850, img: "https://placehold.co/400x300/ff7675/ffffff?text=School+Bag" },
+                { name: "Stainless Steel Insulated Bottle", price: 320, img: "https://placehold.co/400x300/fd79a8/ffffff?text=Steel+Bottle" },
+                { name: "Insulated 3-Layer Lunch Box", price: 380, img: "https://placehold.co/400x300/a29bfe/ffffff?text=Lunch+Box" },
+                { name: "Waterproof Rain Cover for Bags", price: 150, img: "https://placehold.co/400x300/74b9ff/ffffff?text=Rain+Cover" },
+                { name: "Cute Theme Pouches for Kids", price: 95, img: "https://placehold.co/400x300/55efc4/ffffff?text=Kids+Pouch" },
+                { name: "Character Sipper Sports Bottle", price: 240, img: "https://placehold.co/400x300/ffeaa7/ffffff?text=Sipper+Bottle" },
+                { name: "Compact Canvas Pencil Pouch", price: 75, img: "https://placehold.co/400x300/fab1a0/ffffff?text=Pencil+Pouch" },
+                { name: "Eco-friendly Fabric Lunch Bag", price: 120, img: "https://placehold.co/400x300/6c5ce7/ffffff?text=Lunch+Bag" },
+                { name: "Heavy-Duty High School Backpack", price: 1200, img: "https://placehold.co/400x300/0984e3/ffffff?text=HighSchool+Bag" },
+                { name: "Mini Desk Waste Bin for Kids", price: 110, img: "https://placehold.co/400x300/00cec9/ffffff?text=Mini+Desk+Bin" }
+            ],
+            art: [
+                { name: "Premium Oil Pastels (25 Shades)", price: 140, img: "https://placehold.co/400x300/55efc4/ffffff?text=Oil+Pastels" },
+                { name: "Acrylic Paints Vibrant Artist Set", price: 350, img: "https://placehold.co/400x300/ffeaa7/ffffff?text=Acrylic+Paints" },
+                { name: "Professional Artist Brushes Pack", price: 180, img: "https://placehold.co/400x300/fab1a0/ffffff?text=Paint+Brushes" },
+                { name: "Canvas Boards 8x10 (Pack of 2)", price: 160, img: "https://placehold.co/400x300/ff7675/ffffff?text=Canvas+Boards" },
+                { name: "Origami Craft Paper Pack", price: 50, img: "https://placehold.co/400x300/fd79a8/ffffff?text=Craft+Papers" },
+                { name: "Non-Toxic Play Clay Dough Set", price: 120, img: "https://placehold.co/400x300/a29bfe/ffffff?text=Play+Clay" },
+                { name: "Glitter Powder Shakers Set", price: 75, img: "https://placehold.co/400x300/74b9ff/ffffff?text=Glitter+Set" },
+                { name: "Craft Fast-Drying Glue Bottle", price: 45, img: "https://placehold.co/400x300/6c5ce7/ffffff?text=Craft+Glue" },
+                { name: "Color Sketch Pens (24 Shades Pack)", price: 90, img: "https://placehold.co/400x300/0984e3/ffffff?text=Sketch+Pens" },
+                { name: "Color Mixing Palette & Bowls", price: 40, img: "https://placehold.co/400x300/00cec9/ffffff?text=Color+Palette" }
+            ]
+        };
+
+        let selectedCart = [];
+
+        // Tab Switching Logic (Creates the multi-page layout seamlessly)
+        function switchPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            // Deactivate all navigation tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected page
+            document.getElementById('page-' + pageId).classList.add('active');
+            
+            // Set correct tab active look
+            event.currentTarget.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Display individual category contents
+        function loadCategory(category) {
+            const displayArea = document.getElementById("dynamic-products-area");
+            const titleField = document.getElementById("current-category-title");
+            const grid = document.getElementById("items-grid");
+
+            grid.innerHTML = "";
+
+            const titles = { 
+                notebooks: "📓 Premium Notebooks Collection (10 Items)", 
+                stationery: "✏️ Cute Stationery Items (10 Items)", 
+                gear: "🎒 Durable School Gear (10 Items)", 
+                art: "🎨 Creative Art & Craft Supplies (10 Items)" 
+            };
+            titleField.innerText = titles[category];
+
+            const currentItems = productData[category];
+
+            currentItems.forEach(item => {
+                const itemCard = document.createElement("div");
+                itemCard.classList.add("item-display-card");
+                itemCard.innerHTML = `
+                    <img src="${item.img}" alt="${item.name}">
+                    <h4>${item.name}</h4>
+                    <div class="price-tag">₹${item.price}</div>
+                    <button class="add-bill-btn" onclick="addToBill('${item.name}', ${item.price})">➕ Add to Bill</button>
+                `;
+                grid.appendChild(itemCard);
+            });
+
+            displayArea.style.display = "block";
+            grid.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Add item to cart logic
+        function addToBill(name, price) {
+            selectedCart.push({ name, price });
+            updateBillUI();
+            
+            // Visual feedback alert on tab indicator
+            document.getElementById("cart-count").innerText = selectedCart.length;
+        }
+
+        // Remove item from cart logic
+        function removeFromBill(index) {
+            selectedCart.splice(index, 1);
+            updateBillUI();
+            document.getElementById("cart-count").innerText = selectedCart.length;
+        }
+
+        // Update calculations and interface for the Bill section
+        function updateBillUI() {
+            const tbody = document.getElementById("bill-body");
+            const totalField = document.getElementById("bill-total-amount");
+            
+            tbody.innerHTML = "";
+            
+            if (selectedCart.length === 0) {
+                tbody.innerHTML = `
+                    <tr id="empty-bill-message">
+                        <td colspan="3" style="text-align: center; color: #b2bec3; padding: 30px;">Your bill is currently empty. Go to the "Shop Items" page to add products!</td>
+                    </tr>
+                `;
+                totalField.innerText = "₹0";
+                return;
+            }
+
+            let computedTotal = 0;
+            selectedCart.forEach((item, index) => {
+                computedTotal += item.price;
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td><strong>${item.name}</strong></td>
+                    <td style="color: #ff7675; font-weight: bold;">₹${item.price}</td>
+                    <td><button class="remove-btn" onclick="removeFromBill(${index})">❌ Remove</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            totalField.innerText = "₹" + computedTotal;
+        }
+    </script>
+</body>
+</html>
